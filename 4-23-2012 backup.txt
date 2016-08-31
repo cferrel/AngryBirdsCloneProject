@@ -1,0 +1,920 @@
+/**
+ Authors: William Greer, Alonso Cadenas, Joe Flowers, Cassidy Ferrel
+ Team Name: Big Ball of Hack
+ Title: Angry Birds Rip Off
+ Description:  This program creates a physics based game where birds are launched from a slingshot with the intention of destroying all the pigs in the game.
+ Date created: 02/15/2012
+ Due date: 04/25/2012
+ Date last modified: 04/22/2012
+    With assitance from : http://lazyfoo.net,   http://www.libsdl.org/,     Professor Booth
+*/
+
+#include <iostream>
+//#include "SDL/SDL.h"
+#include "Object.h"
+#include "Bird.h"
+#include "Brick.h"
+#include "Pig.h"
+#include <sstream>
+using namespace std;
+
+/**
+description: Sets up level one
+
+pre-condition: An array of Objects with the minimum size of 12 exists
+
+post-condition: All Objects have been placed for this level
+
+return: bool
+**/
+bool levelOne(Object *ob);
+
+/**
+description: Sets up level two
+
+pre-condition: An array of Objects with the minimum size of 12 exists
+
+post-condition: All Objects have been placed for this level
+
+return: bool
+**/
+bool levelTwo(Object *ob);
+
+/**
+description: Sets up level two
+
+pre-condition: An array of Objects with the minimum size of 12 exists
+
+post-condition: All Objects have been placed for this level
+
+return: bool
+**/
+bool levelThree(Object *ob);
+
+/**
+description: Calculates the initial forces based on the location of the bird Object
+
+pre-condition: An array of Objects with the minimum size of 12 exists
+
+post-condition: The initial forces have been calculated
+
+return: bool
+**/
+bool findSpot(Object a, double& radian, double& force);
+
+
+/**
+description: Writes the graphics of the numbers to the screen
+
+pre-condition: The screen exists and there is a variable to print
+
+post-condition: A variable has been printed to the screeen
+
+return: bool
+**/
+bool writeNumbers(SDL_Surface *screen, int var, int pixel);
+
+/**
+description: Writes a caption on the game window
+
+pre-condition: Objects have been created
+
+post-condition: A caption has been written on the game window
+
+return: bool
+**/
+bool writeCaption();
+
+/**
+description: Adds to the total score depending on the number of birds used
+
+pre-condition: A Bird Object exists
+
+post-condition: The total score has been changed
+
+return: bool
+**/
+bool birdScoring();
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool wait();
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool checkHitAndDeath(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool gameOverLevelOne(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool gameOverLevelTwo(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool gameOverLevelThree(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool gameOver(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool firstCheck(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool birdDeathOrStall(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool loadImages();
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool loadTrans();
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool preGameMouseDown(Object *ob);
+
+/**
+description: class copy constructor
+
+pre-condition: a Stack object exists
+
+post-condition: a copy of the class object other is made
+
+return: bool
+**/
+bool outerMouseDown(Object *ob);
+
+    //The surfaces that will be used
+    SDL_Surface *background = NULL;
+    SDL_Surface *splash = NULL;
+    SDL_Surface *victory = NULL;
+    SDL_Surface *screen = NULL;
+    SDL_Surface *BIRDIE = NULL;
+    SDL_Surface *PLAYAGAIN = NULL;
+    SDL_Surface *SCORE = NULL;
+
+    SDL_Surface *a0 = NULL;
+    SDL_Surface *a1 = NULL;
+    SDL_Surface *a2 = NULL;
+    SDL_Surface *a3 = NULL;
+    SDL_Surface *a4 = NULL;
+    SDL_Surface *a5 = NULL;
+    SDL_Surface *a6 = NULL;
+    SDL_Surface *a7 = NULL;
+    SDL_Surface *a8 = NULL;
+    SDL_Surface *a9 = NULL;
+
+    SDL_Surface *GameOverText = NULL;
+
+    string caption = "ANGRY BIRDS RIP OFF:: PRESENTED BY BIG BALL OF HACK ";
+    string BirdsUsed   = "                       BIRDS USED : " ;
+    string scoreString = "                       SCORE : " ;
+
+    int totalScore = 0;
+    int birdsUsed  = 1;
+    int elapsedTime = 0;
+    int Level      = 0;
+
+
+    double angle = 0;
+    double force = 500;
+
+    bool pregame = true; /// bool for the spalsh screen
+    bool first   = true;
+    bool trying  = true;
+
+    bool birdStopped = false;
+    bool inner  = false;
+
+
+    int MouseX;
+    int MouseY;
+    SDL_Event event;
+
+    bool GAMEover = false;
+
+
+
+int main( int argc, char* args[] )
+{
+
+
+
+    //Start SDL
+    //Initialize all SDL subsystems
+    if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+    {
+        return 1;
+    }
+
+    //Set up the screen
+    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+
+    //If there was an error in setting up the screen
+    if( screen == NULL )
+    {
+        return 1;
+    }
+
+
+    //Set the window caption
+    writeCaption();
+
+
+    loadImages();
+    loadTrans();
+
+
+    //Apply the background to the screen surface
+    apply_surface( 0, 0, splash, screen );
+
+    SDL_Flip(screen);
+
+
+Object *ob = new Object[12];
+
+levelOne(ob);
+Level ++;
+
+
+while ( SDL_WaitEvent(&event)&&pregame) {
+    switch (event.type) {
+
+            case SDL_MOUSEBUTTONDOWN:
+                preGameMouseDown(ob);
+                break;
+
+            case SDL_QUIT:
+                exit(0);
+    }
+}
+
+
+
+
+while ( SDL_WaitEvent(&event)) {
+    switch (event.type) {
+
+    case SDL_MOUSEBUTTONDOWN:
+
+        outerMouseDown(ob);
+
+    while ( SDL_WaitEvent(&event) && inner) {
+        switch (event.type) {
+
+            case SDL_MOUSEMOTION:
+                if(first){
+
+                   firstCheck(ob);
+                }  /// ends if (first)
+                trying = true;
+
+                break;
+/// ends mouse motion innner
+
+             case SDL_MOUSEBUTTONUP:
+                first = false;
+                findSpot(ob[0],angle,force);
+                ob[0].impart_Force(angle, force );
+
+                while(trying){
+
+                    //SDL_PollEvent(&event);
+                    apply_surface( 0, 0, background, screen );
+
+                    checkHitAndDeath(ob);
+
+                    ob[0].update(ob,12);
+                    ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+
+                    writeCaption();
+
+                    SDL_Flip( screen );
+
+                    if(event.type==SDL_QUIT)
+                    {
+                      exit(0);
+                    }
+
+                    if(Level == 1)
+                    {
+                        gameOverLevelOne(ob);
+                    }
+                    if(Level == 2)
+                    {
+                        gameOverLevelTwo(ob);
+                    }
+                    if(Level == 3)
+                    {
+                        gameOverLevelThree(ob);
+                    }
+
+                    if(ob[0].getLine().force==0)
+                    {
+                        wait();
+                        birdStopped = true;
+                    }
+
+                    if(ob[0].loc.x>SCREEN_WIDTH || birdStopped){
+                        birdDeathOrStall(ob);
+                    }
+
+                }  /// ends while(trying)
+
+                break;
+/// ends mouse button up inner
+
+
+
+            case SDL_QUIT:
+                exit(0);
+/// ends quit inner
+
+            }
+
+    }; /// ends while loop
+
+                SDL_Flip( screen );
+                break;
+/// ends mouse button down outer
+
+            case SDL_QUIT:
+                exit(0);
+/// ends quit outer
+        }
+}; /// ends outer loop
+
+
+    return 0;
+}
+
+
+
+bool levelOne(Object *ob)
+{
+
+
+    ob[0] = Bird();
+    ob[1] = Brick();
+    ob[2] = Brick();
+    ob[3] = Brick();
+    ob[4] = Brick();
+    ob[5] = Brick();
+    ob[6] = Pig();
+    ob[7] = Brick();
+    ob[8] = Brick();
+    ob[9] = Brick();
+    ob[10]= Brick();
+    ob[11]= Pig();
+
+    int j = 0;
+    for(int i=1; i < 7; i++)
+    {
+        ob[i].loc.x = 1000;
+        ob[i].loc.y = 760 - j;
+        j +=40;
+    }
+
+    j=0;
+    for(int i=7; i < 12; i++)
+    {
+        ob[i].loc.x = 1100;
+        ob[i].loc.y = 760 - j;
+        j +=40;
+    }
+
+    return true;
+
+}
+
+
+bool levelTwo(Object *ob){
+
+    ob[0] = Bird();
+    ob[1] = Brick();
+    ob[2] = Brick();
+    ob[3] = Brick();
+    ob[4] = Brick();
+    ob[5] = Brick();
+    ob[6] = Brick();
+    ob[7] = Pig();
+    ob[8] = Brick();
+    ob[9] = Brick();
+    ob[10]= Brick();
+    ob[11]= Pig();
+
+    int j = 0;
+    for(int i=1; i < 8; i++)
+    {
+        ob[i].loc.x = 1000;
+        ob[i].loc.y = 760 - j;
+        j +=40;
+    }
+
+    j=0;
+    for(int i=8; i < 12; i++)
+    {
+        ob[i].loc.x = 1100;
+        ob[i].loc.y = 760 - j;
+        j +=40;
+    }
+
+    return true;
+}
+
+bool levelThree(Object *ob){
+
+    ob[0] = Bird();
+    ob[1] = Brick();
+    ob[2] = Brick();
+    ob[3] = Brick();
+    ob[4] = Brick();
+    ob[5] = Brick();
+    ob[6] = Brick();
+    ob[7] = Brick();
+    ob[8] = Brick();
+    ob[9] = Pig();
+    ob[10]= Brick();
+    ob[11]= Pig();
+
+    int j = 0;
+    for(int i=1; i < 10; i++)
+    {
+        ob[i].loc.x = 1000;
+        ob[i].loc.y = 760 - j;
+        j +=40;
+    }
+
+    j=0;
+    for(int i=10; i < 12; i++)
+    {
+        ob[i].loc.x = 1100;
+        ob[i].loc.y = 760 - j;
+        j +=40;
+    }
+
+    return true;
+}
+
+
+bool findSpot(Object a, double &angle, double &force){
+
+
+    force = (105.0-a.loc.x)/(80.0)*6.80;
+    angle = (a.loc.y-540.0)/(75.0)*.14*PI;
+
+    if(abs(angle) > .2*PI)
+        angle = 0;
+    if(force>6.8||force<1.5)
+        force = 1.5;
+
+/*
+    if(a.loc.y>540)
+        angle = .050* PI  ;
+    if(a.loc.y>550)
+        angle = .080* PI  ;
+    if(a.loc.y>570)
+        angle = .110* PI  ;
+    if(a.loc.y>590)
+        angle = .140* PI  ;
+
+    if(a.loc.y<540)
+        angle = -.050* PI  ;
+    if(a.loc.y<530)
+        angle = -.080* PI  ;
+    if(a.loc.y<510)
+        angle = -.110* PI  ;
+    if(a.loc.y<490)
+        angle = -.140* PI  ;
+
+
+    if(a.loc.x<105)
+        force = 1.50;
+    if(a.loc.x<95)
+        force = 2.08;
+    if(a.loc.x<85)
+        force = 2.66;
+    if(a.loc.x<75)
+        force = 3.24;
+    if(a.loc.x<65)
+        force = 3.82;
+    if(a.loc.x<55)
+        force = 4.40;
+    if(a.loc.x<45)
+        force = 4.98;
+    if(a.loc.x<40)
+        force = 5.56;
+    if(a.loc.x<35)
+        force = 6.14;
+    if(a.loc.x<30)
+        force = 6.72;
+*/
+    return true;
+
+}
+
+
+
+bool writeNumbers(SDL_Surface *screen, int var, int pixel){
+
+
+    int counter = 1000 ;
+    while(var>0)
+    {
+        switch(var%10)
+        {
+
+        case 0: apply_surface( counter, pixel , a0 ,screen);
+                break;
+        case 1: apply_surface( counter, pixel , a1 ,screen);
+                break;
+        case 2: apply_surface( counter, pixel , a2 ,screen);
+                break;
+        case 3: apply_surface( counter, pixel , a3 ,screen);
+                break;
+        case 4: apply_surface( counter, pixel , a4 ,screen);
+                break;
+        case 5: apply_surface( counter, pixel , a5 ,screen);
+                break;
+        case 6: apply_surface( counter, pixel , a6 ,screen);
+                break;
+        case 7: apply_surface( counter, pixel , a7 ,screen);
+                break;
+        case 8: apply_surface( counter, pixel , a8 ,screen);
+                break;
+        case 9: apply_surface( counter, pixel , a9 ,screen);
+                break;
+        }
+        counter-=80;
+        var = var / 10;
+    }
+
+
+    return true;
+}
+
+
+bool writeCaption(){
+    string displayCaption = "";
+    stringstream oz;
+    oz << caption << BirdsUsed << (birdsUsed) << scoreString << totalScore ;
+    displayCaption = oz.str();
+    SDL_WM_SetCaption( displayCaption.c_str() , NULL );
+
+    return true;
+}
+
+
+
+bool birdScoring(){
+
+
+     switch(birdsUsed){
+        case 1: totalScore+=1000;
+        case 2: totalScore+=1000;
+        case 3: totalScore+=1000;
+        case 4: totalScore+=1000;
+        default: break;
+    }
+
+    return true;
+}
+
+bool wait(){
+
+    elapsedTime = clock();
+    while(clock() - elapsedTime < 1500)
+    {
+        ;
+    }
+    return true;
+}
+
+bool checkHitAndDeath(Object *ob){
+
+    for(int i =1 ; i < 12; i++){
+        if(ob[0].hasHit(ob[i]))
+        {
+            if(ob[i].hitCount<2)
+                totalScore += ob[i].getScore();
+            ob[i].hitCount++;
+            ob[i].dead =  true;
+        }
+      ob[i].update();
+      ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+    }   /// ends for loop
+    return true;
+}
+
+
+bool gameOverLevelOne(Object *ob){
+
+    if(ob[6].dead && ob[11].dead)
+        {
+            birdScoring();
+            writeCaption();
+
+
+            apply_surface( 0, 0, victory, screen );
+            apply_surface( 100, 200 , BIRDIE ,screen);
+            apply_surface( 100, 400 , SCORE ,screen);
+            apply_surface( 100, 600 , PLAYAGAIN ,screen);
+
+
+
+            writeNumbers(screen, birdsUsed, 200);
+            writeNumbers(screen, totalScore, 400);
+
+            birdsUsed  = 0;
+            totalScore = 0;
+
+            SDL_Flip( screen );
+
+            trying = false;
+            first  = true;
+            inner = false;
+            levelTwo(ob);
+            Level++;
+
+        }
+    return true;
+
+}
+
+bool gameOverLevelTwo(Object *ob){
+    if(ob[7].dead && ob[11].dead)
+        {
+            birdScoring();
+            writeCaption();
+
+
+            apply_surface( 0, 0, victory, screen );
+            apply_surface( 100, 200 , BIRDIE ,screen);
+            apply_surface( 100, 400 , SCORE ,screen);
+            apply_surface( 100, 600 , PLAYAGAIN ,screen);
+
+
+
+            writeNumbers(screen, birdsUsed, 200);
+            writeNumbers(screen, totalScore, 400);
+
+            birdsUsed  = 0;
+            totalScore = 0;
+
+            SDL_Flip( screen );
+            trying = false;
+            first  = true;
+            inner = false;
+            levelThree(ob);
+            Level++;
+        }
+    return true;
+}
+
+bool gameOverLevelThree(Object *ob){
+    if(ob[9].dead && ob[11].dead)
+        {
+            birdScoring();
+            writeCaption();
+
+
+            apply_surface( 0, 0, victory, screen );
+            apply_surface( 100, 200 , BIRDIE ,screen);
+            apply_surface( 100, 400 , SCORE ,screen);
+            apply_surface( 100, 600 , PLAYAGAIN ,screen);
+
+
+
+            writeNumbers(screen, birdsUsed, 200);
+            writeNumbers(screen, totalScore, 400);
+
+            birdsUsed  = 0;
+            totalScore = 0;
+
+            SDL_Flip( screen );
+            trying = false;
+            first  = true;
+            inner = false;
+            Level++;
+            wait();
+            gameOver(ob);
+    }
+    return true;
+}
+
+bool gameOver(Object *ob)
+{
+    apply_surface( 0, 0, victory, screen );
+    apply_surface( 100, 200 , GameOverText ,screen);
+    for(int i =1 ; i < 12; i++){
+            ob[i].dead = true;
+            ob[i].hitCount = 3;
+    }
+    ob[0]=  Bird();
+    GAMEover = true;
+    return true;
+}
+
+
+bool firstCheck(Object *ob){
+     SDL_GetMouseState(&MouseX, &MouseY);
+        if(MouseX-20>25 && MouseX-20<105 && MouseY-20<615 && MouseY-20>465 )
+        {
+
+            apply_surface( 0, 0, background, screen );
+            for(int i =1 ; i < 12; i++)
+                ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+            ob[0].loc.x=MouseX-20;
+            ob[0].loc.y=MouseY-20;
+
+        }
+        ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+        SDL_Flip( screen );
+        return true;
+
+}
+
+bool birdDeathOrStall(Object *ob){
+
+    ob[0].update(ob,100);
+    ob[0] = Bird();
+    apply_surface( 0, 0, background, screen );
+
+    checkHitAndDeath(ob);
+
+    ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+    SDL_Flip( screen );
+    birdsUsed++;
+    trying = false;
+    elapsedTime = 0;
+    birdStopped = false;
+    first =true;
+    return true;
+}
+
+
+
+bool loadImages(){
+    //Load the images
+    background = load_image( "Display.bmp" );
+    splash = load_image( "Splash.bmp" );
+    victory = load_image( "Victory.bmp" );
+
+     BIRDIE = load_image( "BirdUsedText.bmp" );
+     PLAYAGAIN = load_image( "PlayAgainText.bmp" );
+     SCORE = load_image( "ScoreText.bmp" );
+
+     a0 = load_image( "0.bmp" );
+     a1 = load_image( "1.bmp" );
+     a2 = load_image( "2.bmp" );
+     a3 = load_image( "3.bmp" );
+     a4 = load_image( "4.bmp" );
+     a5 = load_image( "5.bmp" );
+     a6 = load_image( "6.bmp" );
+     a7 = load_image( "7.bmp" );
+     a8 = load_image( "8.bmp" );
+     a9 = load_image( "9.bmp" );
+
+    GameOverText =load_image("GameOverText.bmp");
+    return true;
+}
+
+
+bool loadTrans(){
+
+    SDL_SetColorKey(BIRDIE,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(PLAYAGAIN,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(SCORE,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a0,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a1,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a2,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a3,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a4,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a5,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a6,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a7,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a8,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(a9,SDL_SRCCOLORKEY,0xFF00FF);
+    SDL_SetColorKey(GameOverText,SDL_SRCCOLORKEY,0xFF00FF);
+
+    return true;
+}
+
+
+bool preGameMouseDown(Object *ob){
+
+    pregame = false;
+    apply_surface( 0, 0, background, screen );
+    for(int i =0 ; i < 12; i++)
+        ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+    SDL_Flip( screen );
+
+    return true;
+}
+
+
+bool outerMouseDown(Object *ob){
+    inner = true;
+    apply_surface( 0, 0, background, screen );
+    if(!GAMEover)
+    {
+
+
+    for(int i =0 ; i < 12; i++)
+        ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+    SDL_GetMouseState(&MouseX, &MouseY);
+
+    //ob[0].draw(MouseX,MouseY,screen);
+    first = true;
+    }
+    SDL_Flip( screen );
+
+    return true;
+
+}

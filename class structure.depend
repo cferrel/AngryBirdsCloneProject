@@ -1,0 +1,146 @@
+# depslib dependency file v1.0
+1331261048 source:f:\purple\!!!!angry birds\class structure\main.cpp
+	<iostream>
+	"Object.h"
+	"Bird.h"
+	"Brick.h"
+	"Pig.h"
+
+1331261622 f:\purple\!!!!angry birds\class structure\object.h
+	"SDL/SDL.h"
+	<string>
+	<cstdlib>
+	<cmath>
+
+1331254826 f:\purple\!!!!angry birds\class structure\sdls.h
+	"SDL/SDL.h"
+
+1331261384 f:\purple\!!!!angry birds\class structure\bird.h
+	"Object.h"
+
+1331261384 f:\purple\!!!!angry birds\class structure\brick.h
+	"Object.h"
+
+1331261384 f:\purple\!!!!angry birds\class structure\pig.h
+	"Object.h"
+
+1331261530 source:f:\purple\!!!!angry birds\class structure\object.cpp
+	"Object.h"
+
+1331261502 source:f:\purple\!!!!angry birds\class structure\brick.cpp
+	"Brick.h"
+
+1331261502 source:f:\purple\!!!!angry birds\class structure\pig.cpp
+	"Pig.h"
+
+1331261502 source:f:\purple\!!!!angry birds\class structure\bird.cpp
+	"Bird.h"
+
+1331283696 source:c:\users\greerw\desktop\test\object.cpp
+	"Object.h"
+
+1332708227 c:\users\greerw\desktop\test\object.h
+	"SDL/SDL.h"
+	<string>
+	<cstdlib>
+	<cmath>
+	<ctime>
+
+1332707000 source:c:\users\greerw\desktop\test\main.cpp
+	<iostream>
+	"Object.h"
+	"Bird.h"
+	"Brick.h"
+	"Pig.h"
+
+1332705107 c:\users\greerw\desktop\test\bird.h
+	"Object.h"
+
+1332705107 c:\users\greerw\desktop\test\brick.h
+	"Object.h"
+
+1332705107 c:\users\greerw\desktop\test\pig.h
+	"Object.h"
+
+1332705107 source:c:\users\greerw\desktop\test\brick.cpp
+	"Brick.h"
+
+1332705107 source:c:\users\greerw\desktop\test\pig.cpp
+	"Pig.h"
+
+1332705107 source:c:\users\greerw\desktop\test\bird.cpp
+	"Bird.h"
+
+1335125920 source:e:\class structure\brick.cpp
+	"Brick.h"
+
+1335210846 e:\class structure\brick.h
+	"Object.h"
+
+1335126016 e:\class structure\object.h
+	"SDL/SDL.h"
+	<string>
+	<cstdlib>
+	<cmath>
+	<ctime>
+
+1335125962 source:e:\class structure\object.cpp
+	"Object.h"
+	<typeinfo>
+
+1335125920 source:e:\class structure\pig.cpp
+	"Pig.h"
+
+1335210846 e:\class structure\pig.h
+	"Object.h"
+
+1335203138 source:e:\class structure\bird.cpp
+	"Bird.h"
+
+1335210846 e:\class structure\bird.h
+	"Object.h"
+
+1335210252 source:e:\class structure\main.cpp
+	<iostream>
+	"Object.h"
+	"Bird.h"
+	"Brick.h"
+	"Pig.h"
+	<sstream>
+
+1334264296 source:h:\class structure\brick.cpp
+	"Brick.h"
+
+1332705108 h:\class structure\brick.h
+	"Object.h"
+
+1334264194 h:\class structure\object.h
+	"SDL/SDL.h"
+	<string>
+	<cstdlib>
+	<cmath>
+	<ctime>
+
+1333566380 source:h:\class structure\pig.cpp
+	"Pig.h"
+
+1332705108 h:\class structure\pig.h
+	"Object.h"
+
+1334267988 source:h:\class structure\main.cpp
+	<iostream>
+	"Object.h"
+	"Bird.h"
+	"Brick.h"
+	"Pig.h"
+
+1332705108 h:\class structure\bird.h
+	"Object.h"
+
+1334264194 source:h:\class structure\bird.cpp
+	"Bird.h"
+
+1334267340 source:h:\class structure\object.cpp
+	"Object.h"
+	<typeinfo>
+

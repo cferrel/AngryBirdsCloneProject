@@ -1,0 +1,699 @@
+/**
+ Author: William Greer, Alonso Cadenas, Joe Flowers, Cassidy Ferrel
+    With assitance from : http://lazyfoo.net,   http://www.libsdl.org/
+*/
+
+#include <iostream>
+//#include "SDL/SDL.h"
+#include "Object.h"
+#include "Bird.h"
+#include "Brick.h"
+#include "Pig.h"
+using namespace std;
+
+
+/**
+
+for loading screen
+
+Game title
+Authors
+company Team5 or new name
+
+
+
+ angry coders
+
+
+ gryfindor
+ bad wolf
+ booth industry
+ timelord co
+ achiles heel
+ arrow in the knee
+ codewarriors
+ code monkeys
+ insert witty name here
+ witty  name
+ rabbid bears
+ team alaska
+ booths minions
+ team circle
+ circular connundrum
+ PIxR^2
+ ln(cabin)
+
+
+*/
+
+/**
+
+base class :  Object
+
+Object:
+        {
+            Shape
+            id
+            type
+        }
+
+Drawable:
+        {
+            void draw();
+        }
+Movable:
+        {
+            mass
+            force
+            direction
+            score   :: value if destroyed
+            void update();
+        }
+
+
+Bird:
+        {
+            circle
+                point
+                raidus
+            force
+            direction
+        }
+
+Block:
+        {
+            will have
+            rectangles
+                two points
+                median
+            max impact force
+        }
+
+
+Pigs:
+        {
+            circles
+                point
+                raidus
+            max impact force
+        }
+
+
+
+
+structs : point
+
+point:
+        {
+            int x and y
+        }
+
+circle:
+        {
+            point
+            radius
+        }
+
+*/
+
+
+
+/**
+
+for driver
+
+
+mouse down
+mouse up
+mouse drag
+
+checking for mouse inside of birds radius to click the bird
+while dragging follow mouse till radius of (some size 35 pixels?)
+release on mouse up
+
+calculate force imparted
+the velocity
+the direction
+every 4 frames plot the dot?
+
+20 frames
+
+send to physics engine for updating
+
+*/
+
+
+/**
+
+for physics engine
+
+update the objects position
+update the forces
+check for impact
+if collision update forces and position again
+
+send update to graphics engine
+*/
+
+
+/**
+
+for graphics enginge
+
+receive new object positions
+draw them onto the screen
+flip the screen 20 times per second
+
+*/
+
+
+int main( int argc, char* args[] )
+{
+
+
+    //The surfaces that will be used
+    //SDL_Surface *message = NULL;
+    SDL_Surface *background = NULL;
+    SDL_Surface *splash = NULL;
+    SDL_Surface *victory = NULL;
+    SDL_Surface *screen = NULL;
+
+    //Start SDL
+    //Initialize all SDL subsystems
+    if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+    {
+        return 1;
+    }
+
+    //Set up the screen
+    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+    //If there was an error in setting up the screen
+    if( screen == NULL )
+    {
+        return 1;
+    }
+
+    //Set the window caption
+  //  SDL_WM_SetCaption( "ANGRY BIRDS RIP OFF:: PRESENTED BY ANGRY CODERS", NULL );
+SDL_WM_SetCaption( "ANGRY BIRDS RIP OFF:: PRESENTED BY BIG BALL OF HACK", NULL );
+
+    //Load the images
+  //  message = load_image( "Hello.bmp" );
+    background = load_image( "Display.bmp" );
+    splash = load_image( "Splash.bmp" );
+    victory = load_image( "Victory.bmp" );
+
+    //Apply the background to the screen
+    apply_surface( 0, 0, splash, screen );
+  //  apply_surface( 320, 0, background, screen );
+  //  apply_surface( 0, 240, background, screen );
+   // apply_surface( 320, 240, background, screen );
+
+    //Apply the message to the screen
+   // apply_surface( 180, 140, message, screen );
+
+    //Update the screen
+   // if( SDL_Flip( screen ) == -1 )
+   // {
+  //      return 1;
+  //  }
+    SDL_Flip(screen);
+
+    int MouseX;
+    int MouseY;
+    SDL_Event event;
+
+
+
+   // SDL_Surface *ball = NULL;
+   // ball = load_image( "ball.bmp" );
+
+//SDL_SetColorKey(ball,SDL_SRCCOLORKEY,0xFF00FF);
+
+/**
+Bird ob[0];
+Brick brick1;
+Pig pig1;
+
+Object * o = new Object[1];
+o[0] = &ob[0];
+o[1] = &brick1;
+o[2] = &pig1;
+*/
+
+/**
+
+    SDL_Surface *trial = NULL;
+    SDL_Rect box;
+    box.x=MouseX;
+    box.y=MouseY;
+    box.w=40;
+    box.h=40;
+
+
+    SDL_Rect cane;
+    box.x=MouseX;
+    box.y=MouseY;
+    box.w=40;
+    box.h=40;
+  //  background.BlitSurface( , trial, [MouseX,MouseY] )
+ */
+
+/**
+  SDL_WaitEvent(&event);
+  SDL_WaitEvent(&event);
+
+  SDL_GetMouseState(&MouseX, &MouseY);
+
+  ob[0].impart_Force(atan((loc.y-MouseY)/(loc.x-MouseX)), sqrt(pow(loc.y-MouseY,2)+pow(loc.x-MouseX,2)));
+
+    for(int i =0; i<1000; i++){
+          ob[0].update();
+          ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+          SDL_Flip( screen );
+
+    }
+int count=0;
+  ob[0].update();
+  ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+
+*/
+
+Object *ob = new Object[12];
+ob[0] = Bird();
+ob[1] = Brick();
+ob[2] = Brick();
+ob[3] = Brick();
+ob[4] = Brick();
+ob[5] = Brick();
+ob[6] = Pig();
+ob[7] = Brick();
+ob[8] = Brick();
+ob[9] = Brick();
+ob[10]= Brick();
+ob[11]= Pig();
+int j = 0;
+for(int i=1; i < 7; i++)
+{
+    ob[i].loc.x = 1000;
+    ob[i].loc.y = 760 - j;
+    j +=40;
+}
+
+j=0;
+for(int i=7; i < 12; i++)
+{
+    ob[i].loc.x = 1100;
+    ob[i].loc.y = 760 - j;
+    j +=40;
+}
+
+//for(int i =1; i < 12; i++)
+    //ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+/**
+Brick *B1 = new Brick[10];
+
+B1[0].loc.x=1000;
+B1[0].loc.y=760;
+B1[1].loc.x=1000;
+B1[1].loc.y=720;
+B1[2].loc.x=1000;
+B1[2].loc.y=680;
+B1[3].loc.x=1000;
+B1[3].loc.y=640;
+B1[4].loc.x=1000;
+B1[4].loc.y=600;
+
+for(int i =0 ; i < 5; i++)
+    B1[i].draw(B1[i].loc.x,B1[i].loc.y,screen);
+*/
+
+int totalScore = 0;
+int birdsUsed  = 1;
+
+//text_surface ;
+//TTF_Init();
+
+/**
+B1[0].draw(B1[0].loc.x,B1[0].loc.y,screen);
+B1[1].draw(B1[1].loc.x,B1[1].loc.y,screen);
+B1[2].draw(B1[2].loc.x,B1[2].loc.y,screen);
+B1[3].draw(B1[3].loc.x,B1[3].loc.y,screen);
+B1[4].draw(B1[4].loc.x,B1[4].loc.y,screen);
+int j = 0;*/
+//ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+//SDL_Flip( screen );
+  int k=0;
+bool first=true;
+bool trying = true;
+bool pregame = true;
+
+
+while ( SDL_WaitEvent(&event)&&pregame) {
+    switch (event.type) {
+
+            case SDL_MOUSEBUTTONDOWN:
+                pregame = false;
+                apply_surface( 0, 0, background, screen );
+                for(int i =0 ; i < 12; i++)
+                    ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+                SDL_Flip( screen );
+                break;
+    }
+}
+
+
+
+
+
+
+
+while ( SDL_WaitEvent(&event)) {
+    switch (event.type) {
+
+            case SDL_MOUSEBUTTONDOWN:
+
+
+
+                apply_surface( 0, 0, background, screen );
+                for(int i =1 ; i < 12; i++)
+                    ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+                 SDL_GetMouseState(&MouseX, &MouseY);
+                 ob[0].draw(MouseX,MouseY,screen);
+
+
+    while ( SDL_WaitEvent(&event)) {
+                            switch (event.type) {
+
+                                    case SDL_MOUSEMOTION:
+                                        if(first){
+                                            SDL_GetMouseState(&MouseX, &MouseY);
+                                            if(MouseX-20>25 && MouseX-20<105 && MouseY-20<615 && MouseY-20>465 )
+                                            {
+                                                apply_surface( 0, 0, background, screen );
+                                                      for(int i =1 ; i < 12; i++)
+                                                        ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+                                                        ob[0].draw(MouseX-20,MouseY-20,screen);
+
+                                                 ob[0].loc.x=MouseX-20;
+                                                 ob[0].loc.y=MouseY-20;
+
+                                                SDL_Flip( screen );
+
+                                            }
+                                        }
+
+                                        trying = true;
+                                        break;
+
+
+
+
+
+                                     case SDL_MOUSEBUTTONUP:
+/**
+            if((ob[0].loc.y-540)<0&&(ob[0].loc.x-100)<0)
+                k=PI/2;
+            if((ob[0].loc.y-540)>0&&(ob[0].loc.x-100)<0)
+                k=PI;
+            if((ob[0].loc.y-540)>0&&(ob[0].loc.x-100)>0)
+                k=3*PI/2;
+
+*/
+//atan(abs(ob[0].loc.x-100)/abs(ob[0].loc.y-540))+k
+//sqrt(pow(ob[0].loc.y-540,2)+pow(ob[0].loc.x-100,2))
+            ob[0].impart_Force(2*PI/3, 900 );
+
+                                            while(trying){
+
+                                                 SDL_PollEvent(&event);
+                                                 apply_surface( 0, 0, background, screen );
+
+                                                 for(int i =1 ; i < 12; i++){
+                                                      if(ob[0].hasHit(ob[i]))
+                                                        {
+                                                            totalScore += ob[i].getScore();
+                                                            ob[i].dead =  true;
+
+
+                                                        }
+
+                                                      ob[i].update();
+                                                      ob[i].draw(ob[i].loc.x,ob[i].loc.y,screen);
+
+
+                                                  }
+                                                  ob[0].update(ob,12);
+                                                  ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+                                                  SDL_Flip( screen );
+                                                  if(event.type==SDL_QUIT)
+                                                  {
+                                                      exit(0);
+                                                  }
+
+                                                if(ob[6].dead && ob[11].dead)
+                                                {
+
+                                                 apply_surface( 0, 0, victory, screen );
+
+                                                  SDL_Flip( screen );
+
+                                                    trying = false;
+
+                                                    first=false;
+
+                                                }
+                                                if(ob[0].loc.x>SCREEN_WIDTH){
+                                                    ob[0].update(ob,100);
+                                                    ob[0] = Bird();
+                                                    birdsUsed++;
+                                                    trying = false;
+                                                }
+
+                                            }
+
+                                        break;
+
+
+
+
+                                    case SDL_QUIT:
+                                        exit(0);
+                                }
+                        };
+
+
+
+
+
+/**
+
+
+while ( SDL_WaitEvent(&event)) {
+    switch (event.type) {
+
+            case SDL_MOUSEBUTTONDOWN:
+
+
+
+                apply_surface( 0, 0, background, screen );
+                for(int i =0 ; i < 5; i++)
+                    B1[i].draw(B1[i].loc.x,B1[i].loc.y,screen);
+
+                 SDL_GetMouseState(&MouseX, &MouseY);
+                 ob[0].draw(MouseX,MouseY,screen);
+
+
+    while ( SDL_WaitEvent(&event)) {
+                            switch (event.type) {
+
+                                    case SDL_MOUSEMOTION:
+                                        if(first){
+                                            SDL_GetMouseState(&MouseX, &MouseY);
+                                            if(MouseX-20>25 && MouseX-20<175 && MouseY-20<615 && MouseY-20>465 )
+                                            {
+                                                apply_surface( 0, 0, background, screen );
+                                                      for(int i =0 ; i < 5; i++)
+                                                        B1[i].draw(B1[i].loc.x,B1[i].loc.y,screen);
+
+                                                        ob[0].draw(MouseX-20,MouseY-20,screen);
+
+                                                 ob[0].loc.x=MouseX-20;
+                                                 ob[0].loc.y=MouseY-20;
+
+                                                SDL_Flip( screen );
+
+                                            }
+                                        }
+
+
+                                        break;
+
+
+
+
+
+                                     case SDL_MOUSEBUTTONUP:
+
+            ob[0].impart_Force(atan((ob[0].loc.y-540)/(100-ob[0].loc.x)), sqrt(pow(ob[0].loc.y-540,2)+pow(100-ob[0].loc.x,2)));
+
+
+                                            while(true){
+
+                                                 SDL_PollEvent(&event);
+                                                 apply_surface( 0, 0, background, screen );
+
+
+                                                  for(int i =0 ; i < 5; i++){
+                                                      if(ob[0].hasHit(B1[i]))
+                                                        {
+                                                            totalScore += B1[i].getScore();
+                                                            B1[i].dead =  true;
+
+
+                                                        }
+
+                                                      B1[i].update();
+                                                      B1[i].draw(B1[i].loc.x,B1[i].loc.y,screen);
+
+
+                                                  }
+                                                  ob[0].update();
+                                                  ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+                                                  SDL_Flip( screen );
+                                                  if(event.type==SDL_QUIT)
+                                                  {
+                                                      exit(0);
+                                                  }
+
+
+                                            }
+
+                                        break;
+
+
+
+
+                                    case SDL_QUIT:
+                                        exit(0);
+                                }
+                        };
+
+
+
+
+
+*/
+
+
+/**
+
+
+                                        //for(int i =0; i<1000; i++){
+                                            while(true){
+                                                 apply_surface( 0, 0, background, screen );
+
+                                                  for(int i =0 ; i < 5; i++)
+                                                      B1[i].draw(B1[i].loc.x,B1[i].loc.y,screen);
+
+                                                  ob[0].update();
+                                                  ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+                                                  SDL_Flip( screen );
+                                                  if(event.type==SDL_QUIT)
+                                                  {
+                                                      exit(0);
+                                                  }
+                                            }
+
+
+
+
+
+
+
+                    while ( !first || SDL_WaitEvent(&event)) {
+                                    first=true;
+                            switch (event.type) {
+
+                                    case SDL_MOUSEBUTTONUP:
+
+
+                                            for(int i =0; i<1000; i++){
+
+                                                 apply_surface( 0, 0, background, screen );
+
+                                                  for(int i =0 ; i < 5; i++)
+                                                      B1[i].draw(B1[i].loc.x,B1[i].loc.y,screen);
+
+                                                  ob[0].update();
+                                                  ob[0].draw(ob[0].loc.x,ob[0].loc.y,screen);
+                                                  SDL_Flip( screen );
+                                            }
+
+
+                                        SDL_Flip( screen );
+                                        break;
+
+                                    case SDL_QUIT:
+                                        exit(0);
+                                }
+                        };
+                    */
+
+
+
+                SDL_Flip( screen );
+                break;
+
+            case SDL_QUIT:
+                exit(0);
+        }
+};
+
+
+    return 0;
+}
+
+
+
+
+/**
+
+
+while ( SDL_WaitEvent(&event)) {
+
+
+    switch (event.type) {
+    // count++;
+    //count=count%3;
+            case SDL_MOUSEBUTTONDOWN:
+
+
+                SDL_Flip( screen );
+                break;
+ // SDL_GetMouseState(&MouseX, &MouseY);
+               // ob[0].draw(MouseX-20,MouseY-20,screen);
+                ///apply_surface( MouseX-20, MouseY-20,ob[0].getimg(), screen );
+
+
+            case SDL_MOUSEMOTION:
+/**
+                SDL_GetMouseState(&MouseX, &MouseY);
+
+                apply_surface( MouseX, MouseY, message, screen );
+
+
+                SDL_Flip( screen );
+                break;
+
+            case SDL_QUIT:
+                exit(0);
+        }
+
+};
+
+*/
